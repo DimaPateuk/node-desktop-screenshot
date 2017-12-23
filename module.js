@@ -41,7 +41,7 @@ function Screenshot(args) {
 }
 
 Screenshot.prototype.processImage = function(input, output, options, callback) {
-	if(typeof options.width !== "number" && typeof  options.height !== "number" && typeof options.quality !== "number") // no processing required
+	if(typeof options.width !== "number" && typeof  options.height !== "number" && typeof options.quality !== "number" && typeof options.crop !== 'object') // no processing required
 		callback(null);
 	else {
 		new jimp(input, function (err, image) {
@@ -56,10 +56,19 @@ Screenshot.prototype.processImage = function(input, output, options, callback) {
 				var resWidth = Math.floor(image.bitmap.width * (resHeight / image.bitmap.height));
 
 			try {
-				image.resize(resWidth, resHeight);
+				if(typeof options.width === "number"
+				&& typeof options.height === "number")
+					image.resize(resWidth, resHeight);
 
 				if(typeof options.quality === "number" && options.quality >= 0 && options.quality <= 100)
 					image.quality(Math.floor(options.quality)); // only works with JPEGs
+
+				var crop = options.crop;
+				if (crop.x && crop.y && crop.w && crop.h) {
+					image.crop(crop.x, crop.y, crop.w, crop.h);
+				}
+
+
 
 				image.write(output, callback);
 			}
