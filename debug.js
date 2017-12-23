@@ -5,9 +5,9 @@ screenshot("screenshot.png", {crop: {
   y: 100,
   w: 300,
   h: 300,
-}}, function(error, complete) {
-    if(error)
+}}, function(error, image) {
+    if(error) {
         console.log("Screenshot failed", error);
-    else
-        console.log("Screenshot succeeded");
+        return;
+    }
 });

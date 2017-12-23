@@ -68,9 +68,12 @@ Screenshot.prototype.processImage = function(input, output, options, callback) {
 					image.crop(crop.x, crop.y, crop.w, crop.h);
 				}
 
+				if (options.notWrite) {
+					callback(null, image);
+					return;
+				}
 
-
-				image.write(output, callback);
+				image.write(output, function (err) { callback(err, image) } );
 			}
 			catch(error) {
 				callback(error);
